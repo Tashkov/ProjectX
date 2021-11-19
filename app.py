@@ -39,10 +39,9 @@ if not populated:
     result = collection.bulk_write(requesting)
     client.close()
 
-
-cursor = db.collection.find_one({"date": "2020-06-28"})
+# when iterating the cursor it returns a TimeOut error
+cursor = db.collection.find({"date": "2020-06-28"})
 print(cursor)
-
 print("ok")
 
 @app.route('/')
