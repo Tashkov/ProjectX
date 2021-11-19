@@ -1,6 +1,6 @@
 Tasks:
 POC Serverside
-    * Make a GitHub repo 
+    * Make a GitHub repo DONE
     * Build a Flask APP DONE
     * Crate MongoDB instance DONE
     * Connect to MongoDB DONE
