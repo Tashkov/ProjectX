@@ -4,7 +4,7 @@ POC Serverside
     * Build a Flask APP DONE
     * Crate MongoDB instance DONE
     * Connect to MongoDB DONE
-    * Write the .json to MongoDB
+    * Write the .json to MongoDB DONE
     * Query the data by date
 
 POC FrontEnd
