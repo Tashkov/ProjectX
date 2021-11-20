@@ -1,22 +1,11 @@
 import json
-import re
+from flask.wrappers import Response
 from pymongo import MongoClient, InsertOne
-from flask import Flask, jsonify
-from flask_mongoengine import MongoEngine
-from bson.json_util import dumps, loads
-
+from flask import Flask, render_template
+from bson import  json_util
 
 
 app = Flask(__name__)
-
-# app.config['MONGODB_SETTINGS'] = {
-#     'db': 'ProjectX',
-#     'host': 'mongodb+srv://Tashkov:<password>@cluster0.ic3c3.mongodb.net/ProjectX?retryWrites=true&w=majority',
-#     'port': 27017,
-# }
-# db = MongoEngine()
-# db.init_app(app)
-
 
 client = MongoClient("mongodb+srv://Tashkov:<password>@cluster0.ic3c3.mongodb.net/ProjectX?retryWrites=true&w=majority")
 db = client["ProjectX"]
@@ -24,6 +13,7 @@ collection = db["tweets"]
 
 # Initialy populating the DB don't change the value 
 # until a better condition is found
+# Change the value to False if DB is empty
 populated = True
 
 if not populated:
@@ -39,23 +29,27 @@ if not populated:
     result = collection.bulk_write(requesting)
     client.close()
 
-# when iterating the cursor it returns a TimeOut error
-cursor = db.collection.find({"date": "2020-06-28"})
-print(cursor)
-print("ok")
+
 
 @app.route('/')
 def index():
-    return('Home page')
+    return render_template('index.html')
 
-# doesn't work
-@app.route('/date')
-def tweets_by_date():
-    cursor = db.collection.find()
-    resp = dumps(cursor)
-  
-    return resp
+# Displays the tweets created at the wanted date with the format YYYY-MM-DD
+@app.route('/date/<string:date>', methods=["GET"])
+def tweets_by_date(date):
+    try:
+        data = list(collection.find({"date": date}))
+        for tweet in data:
+            tweet["_id"] = str(tweet["_id"])
+        return Response(
+            response= json.dumps(data),
+            status=500,
+            mimetype="application/json"
+        )
+    except Exception as ex:
+        print(ex)
+        return Response(response= json.dumps({"message": "cannot read tweets"}), status=500,mimetype="application/json")
 
-    
 if __name__=='__main__':
     app.run(debug=True)

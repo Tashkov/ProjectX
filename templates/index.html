@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Home</title>
+{% endblock %}
+
+{% block body %}
+<h1>Welcome to Elon's data</h1>
+<hr>
+    <h2>Search by date (YYYY-MM-DD)
+        <form method="POST">
+            <input name="text">
+            <input type="submit">
+        </form>
+    </h2>
+<hr>
+    <h2> Search by likes:
+        <form method="POST">
+            <input name="text">
+            <input type="submit">
+        </form>
+    </h2>
+<hr>
+
+
+{% endblock %}
