@@ -5,7 +5,9 @@ POC Serverside
     * Crate MongoDB instance DONE
     * Connect to MongoDB DONE
     * Write the .json to MongoDB DONE
-    * Query the data by date
+    * Query the data by date DONE
+
+    * Make endpoints for the different data (likes, retweets, likes, replies per day)
 
 POC FrontEnd
     * Query the Data
