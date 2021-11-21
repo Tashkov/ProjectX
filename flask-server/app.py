@@ -2,21 +2,19 @@ import json
 import re
 from pymongo import MongoClient, InsertOne
 from flask import Flask, render_template, Response, request, jsonify
+import os
 
 
 
 app = Flask(__name__)
 
-client = MongoClient("mongodb+srv://Tashkov:<password>@cluster0.ic3c3.mongodb.net/ProjectX?retryWrites=true&w=majority")
+client = MongoClient("mongodb+srv://Tashkov:JNhCHW8nFPkluxLN@cluster0.ic3c3.mongodb.net/ProjectX?retryWrites=true&w=majority")
 db = client["ProjectX"]
 collection = db["tweets"]
 
-# Initialy populating the DB don't change the value 
-# until a better condition is found
-# Change the value to False if DB is empty
-populated = True
-
-if not populated:
+# Populates the DB ! USE ONLY ONCE!
+@app.route('/populateDB')
+def populateDB():
     requesting = list()
     with open(r'elonmusk.json') as f:
         for jsonObj in f.readlines():
@@ -28,6 +26,11 @@ if not populated:
 
     result = collection.bulk_write(requesting)
     client.close()
+
+    return Response(
+        response={"OK"},
+        status=200
+    )
 
 #Helper function to split the old date and return the new one
 def date_builder(old_date: str, new_day):
@@ -47,6 +50,7 @@ def date_builder(old_date: str, new_day):
             9: "09"
         }
         new_day = leading_zero[int(new_day)]
+
     to_join = [year, month, new_day]
     return("-".join(to_join))
 
@@ -208,6 +212,7 @@ def replies_for_day():
         
     # Using the template in the above endpoint, make a request to the DB
     # with the above variables as params
+    # /replies?from=YYYY-MM-DD&to=YYYY-MM-DD
     date_from = request.args.get('from')
     date_to = request.args.get('to')
     
@@ -240,6 +245,38 @@ def replies_for_day():
     except Exception as ex:
         print(ex)
         return Response(response= json.dumps({"message": "cannot read tweets"}), status=500,mimetype="application/json")
+
+
+#Returns all the tweets sorted by hour in a given day
+@app.route("/tweets/time_of_day", methods=["GET"])
+def time_of_day():
+
+    try:
+        day_range = request.args.get("day")
+        tweets_this_day = []
+        data = list(collection.find({"date": day_range}))
+
+        for tweet in data:
+            tweet_time = str(tweet["time"])
+            work_dict = dict()
+            work_dict["tweet_id"] = tweet["id"]
+            work_dict["time"] = tweet_time
+            tweets_this_day.append(work_dict)
+
+        tweets_this_day = sorted(tweets_this_day, key = lambda i: i['time'])
+        print(tweets_this_day)
+
+        return Response(
+            response= json.dumps(tweets_this_day),
+            status=200,
+            mimetype='application/json'
+        )
+
+    except Exception as ex:
+        print(ex)
+        return Response(response= json.dumps({"message": "cannot read tweets"}), status=500,mimetype="application/json")
+
+
 
 if __name__=='__main__':
     app.run(debug=True)

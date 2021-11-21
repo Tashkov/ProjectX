@@ -9,7 +9,7 @@ function App() {
 
 
     useEffect(() => {
-        fetch("/tweets?from=2020-05-01&to=2020-05-30",{
+        fetch("/tweets?from=2020-06-01&to=2020-06-30",{
             'methods':'GET',
             headers : {
                 'Content-Type':'application/json'
