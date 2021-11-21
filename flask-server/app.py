@@ -8,7 +8,7 @@ import os
 
 app = Flask(__name__)
 
-client = MongoClient("mongodb+srv://Tashkov:JNhCHW8nFPkluxLN@cluster0.ic3c3.mongodb.net/ProjectX?retryWrites=true&w=majority")
+client = MongoClient("mongodb+srv://Tashkov:<password>@cluster0.ic3c3.mongodb.net/ProjectX?retryWrites=true&w=majority")
 db = client["ProjectX"]
 collection = db["tweets"]
 
