@@ -1,34 +1,37 @@
 import React, {useState, useEffect} from 'react';
+import './App.css';
 
-function App(props) {
+
+
+function App() {
     
-    const [data, setData] = useState([{}])
+    const [data, setData] = useState([]);
+
 
     useEffect(() => {
-        fetch("/tweets?from=2020-05-01&to=2020-05-30").then(
-            res => res.json()
-        ).then(
-            data => {
-                setData(data)
-                console.log(data)
+        fetch("/tweets?from=2020-05-01&to=2020-05-30",{
+            'methods':'GET',
+            headers : {
+                'Content-Type':'application/json'
             }
-        )    
-    }, [])
+        })
+        .then(response => response.json())
+        .then(response => setData(response))
+        .catch(error => console.log(error))
+
+    },[])
 
     return (
-        <div>
-            
-            {(typeof data.tweets === 'undefined') ? (
-                <p>Loading...</p>
-            ): ( 
-                data.tweets.map((member, i) => (
-                    <p key={i}>{member}</p>
-                ))
-            )}
-
-
+        <div className="App container m-4">
+        <div className="row">
+            <div className="text-center">
+            <h1>On the thrid try i managed to make this work</h1>
+            <h2>Total tweets for a month sorted by day</h2>
+            <p>{data.map(tweet => <div>{tweet.date}: Total tweets - {tweet["total_tweets"]}</div>)}</p>
+            </div>
+        </div>        
         </div>
+
     );
 }
-
 export default App;

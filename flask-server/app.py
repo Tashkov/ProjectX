@@ -61,6 +61,7 @@ def determine_date_range(from_date:str, to_date: str):
     # if we`re looking in the same month
     if fromM == toM and fromD != toD:
         return int(fromD), int(toD)
+    
 
 @app.route('/')
 def index():
@@ -109,7 +110,7 @@ def tweets_for_day():
 
         
             working_dict["date"] = date
-            working_dict["total tweets"] = total_daily_tweets
+            working_dict["total_tweets"] = total_daily_tweets
             to_disp_lst.append(working_dict)
 
         return Response(
@@ -148,7 +149,7 @@ def likes_for_day():
                 total_daily_likes += tweet_likes
         
             working_dict["date"] = date
-            working_dict["total likes"] = total_daily_likes
+            working_dict["total_likes"] = total_daily_likes
             to_disp_lst.append(working_dict)
 
         return Response(
@@ -188,7 +189,7 @@ def retweets_for_day():
                 total_daily_retweets += retweets
         
             working_dict["date"] = date
-            working_dict["total retweets"] = total_daily_retweets
+            working_dict["total_retweets"] = total_daily_retweets
             to_disp_lst.append(working_dict)
 
         return Response(
@@ -228,7 +229,7 @@ def replies_for_day():
                 total_daily_replies += tweet_replies
         
             working_dict["date"] = date
-            working_dict["total replies"] = total_daily_replies
+            working_dict["total_replies"] = total_daily_replies
             to_disp_lst.append(working_dict)
 
         return Response(
